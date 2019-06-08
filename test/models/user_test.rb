@@ -76,9 +76,16 @@ class UserTest < ActiveSupport::TestCase
     @user.password = @user.password_confirmation = " " * 6
     assert_not @user.valid?
   end
+
   # パスワードの最小文字数をテストする
   test "password should have a minimum length" do
     @user.password = @user.password_confirmation = "a" * 5
     assert_not @user.valid?
   end
+
+  # ダイジェストが存在しない場合のauthenticated?のテスト
+  test "authenticated? should return false for a user with nil digest" do
+    assert_not @user.authenticated?('')
+  end
+
 end
