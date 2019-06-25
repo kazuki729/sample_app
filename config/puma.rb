@@ -14,3 +14,7 @@ on_worker_boot do
   # deploying-rails-applications-with-the-puma-web-server#on-worker-boot
   ActiveRecord::Base.establish_connection
 end
+
+# デフォルトは60秒でタイムアウト
+# byebugコンソール動作不良改善
+worker_timeout 500
