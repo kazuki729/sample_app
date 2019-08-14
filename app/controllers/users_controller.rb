@@ -7,6 +7,8 @@ class UsersController < ApplicationController
   def show
     #送られてきたIDからUserを特定して、インスタンス変数にセット
     @user = User.find(params[:id])
+    #activateがfalseならルートURLへリダイレクト
+    redirect_to root_url and return unless @user.activated?
   end
 
   def new
@@ -46,7 +48,8 @@ class UsersController < ApplicationController
   # ユーザーのindexアクション
   def index
     # @users = User.all
-    @users = User.paginate(page: params[:page])
+    #@users = User.paginate(page: params[:page])
+    @users = User.where(activated: true).paginate(page: params[:page])
   end
 
   # destroyアクション
@@ -54,6 +57,18 @@ class UsersController < ApplicationController
     User.find(params[:id]).destroy
     flash[:success] = "User deleted"
     redirect_to users_url
+  end
+
+  def create
+    @user = User.new(user_params)
+    if @user.save
+      @user.send_activation_email
+      # UserMailer.account_activation(@user).deliver_now
+      flash[:info] = "Please check your email to ativate your account"
+      redirect_to root_url
+    else
+      render 'new'
+    end
   end
 
   private
