@@ -8,5 +8,9 @@ if Rails.env.production?
       :aws_secret_access_key => ENV['S3_SECRET_KEY']
     }
     config.fog_directory     =  ENV['S3_BUCKET']
+    config.fog_attributes = { cache_control: "public, max-age=#{365.days.to_i}" }
   end
+
+  # 日本語ファイル名の設定
+  CarrierWave::SanitizedFile.sanitize_regexp = /[^[:word:]\.\-\+]/
 end
