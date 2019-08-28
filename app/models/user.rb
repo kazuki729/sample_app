@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_many :microposts, dependent: :destroy  #１ユーザーが複数のmicropostを所有する.また、ユーザーが削除されたとき、紐づいている投稿も削除される.
   attr_accessor :remember_token, :activation_token, :reset_token
   before_save   :downcase_email
   before_create :create_activation_digest
@@ -79,6 +80,11 @@ class User < ApplicationRecord
   #パスワード再設定の機嫌が切れている場合はTRUEを返す
   def password_reset_expired?
     reset_sent_at < 2.hours.ago
+  end
+
+  #試作feedの定義
+  def feed
+    Micropost.where("user_id = ?", id)
   end
 
   private

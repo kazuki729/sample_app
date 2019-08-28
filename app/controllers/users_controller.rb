@@ -7,6 +7,7 @@ class UsersController < ApplicationController
   def show
     #送られてきたIDからUserを特定して、インスタンス変数にセット
     @user = User.find(params[:id])
+    @microposts = @user.microposts.paginate(page: params[:page])
     #activateがfalseならルートURLへリダイレクト
     redirect_to root_url and return unless @user.activated?
   end
@@ -80,15 +81,7 @@ class UsersController < ApplicationController
       end
 
       # BEFOREアクション
-      # ログイン済みユーザーかどうか確認
-      def logged_in_user
-        unless logged_in?
-          store_location
-          flash[:danger] = "Please log in."
-          redirect_to login_url
-        end
-      end
-
+      
       # 正しいユーザーかどうか確認
       def correct_user
         @user = User.find(params[:id])
