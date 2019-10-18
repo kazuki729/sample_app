@@ -34,3 +34,11 @@ users = User.order(:created_at).take(6) #最初の６人だけ取り出す
   content = Faker::Lorem.sentence(5)
   users.each { |user| user.microposts.create!(content: content) }
 end
+
+# リレーションシップ
+users = User.all
+user  = users.first
+following = users[2..50]  #usersの3番目から51番目※配列だから0始まり
+followers = users[3..40]  #usersの4番目から41番目※配列だから0始まり
+following.each { |followed| user.follow(followed) } #最初のユーザーが3~51番目までのユーザーをフォローする
+followers.each { |follower| follower.follow(user) } #4~41番目のユーザーが最初のユーザーをフォローする

@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
   # コントローラ内の特定のアクションにのみbeforeアクションを適用【onlyオプション】
-  before_action :logged_in_user, only: [:index, :edit, :update, :destroy]
+  before_action :logged_in_user, only: [:index, :edit, :update, :destroy, :following, :followers]
   before_action :correct_user,   only: [:edit, :update]
   before_action :admin_user,     only: :destroy
 
@@ -72,6 +72,22 @@ class UsersController < ApplicationController
     end
   end
 
+  #followingアクション
+  def following
+    @title = "Following"
+    @user  = User.find(params[:id])
+    @users = @user.following.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
+  #followerアクション
+  def followers
+    @title = "Followers"
+    @user  = User.find(params[:id])
+    @users = @user.followers.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
   private
 
       def user_params
@@ -81,7 +97,7 @@ class UsersController < ApplicationController
       end
 
       # BEFOREアクション
-      
+
       # 正しいユーザーかどうか確認
       def correct_user
         @user = User.find(params[:id])
