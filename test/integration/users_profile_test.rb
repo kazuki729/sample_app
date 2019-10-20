@@ -19,10 +19,27 @@ class UsersProfileTest < ActionDispatch::IntegrationTest
     @user.microposts.paginate(page: 1).each do |micropost|
       assert_match micropost.content, response.body
     end
+
+    # Micropost Search
+    get user_path(@user), params: {q: {content_cont: "a"}}
+    q = @user.microposts.ransack(content_cont: "a")
+    q.result.paginate(page:1).each do |micropost|
+      assert_match micropost.content, response.body
+    end
+  end
+
+  test "home profile display" do
+    # Micropost Search
+    log_in_as(@user)
+    get root_path, params: {q: {content_cont: "a"}}
+    q = @user.feed.ransack(content_cont: "a")
+    q.result.paginate(page:1).each do |micropost|
+      assert_match CGI.escapeHTML(micropost.content), response.body
+    end
   end
 
   #プロフィールページの統計情報のテスト
-  test "stats" do
+  test "stats1" do
       log_in_as(@user)
       get root_path
       assert_select '#following', text: "#{@user.following.count}"

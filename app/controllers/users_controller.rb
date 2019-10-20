@@ -5,11 +5,16 @@ class UsersController < ApplicationController
   before_action :admin_user,     only: :destroy
 
   def show
-    #送られてきたIDからUserを特定して、インスタンス変数にセット
     @user = User.find(params[:id])
-    @microposts = @user.microposts.paginate(page: params[:page])
-    #activateがfalseならルートURLへリダイレクト
     redirect_to root_url and return unless @user.activated?
+    if params[:q] && params[:q].reject { |key, value| value.blank? }.present?
+      @q = @user.microposts.ransack(microposts_search_params)
+      @microposts = @q.result.paginate(page: params[:page])
+    else
+      @q = Micropost.none.ransack
+      @microposts = @user.microposts.paginate(page: params[:page])
+    end
+    @url = user_path(@user)
   end
 
   def new

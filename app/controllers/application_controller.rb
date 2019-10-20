@@ -15,4 +15,8 @@ class ApplicationController < ActionController::Base
         redirect_to login_url #ログインURLに移動
       end
     end
+
+    def microposts_search_params
+      params.require(:q).permit(:content_cont)
+    end
 end
