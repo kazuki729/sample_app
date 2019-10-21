@@ -28,6 +28,21 @@ malory:
   activated: true
   activated_at: <%= Time.zone.now %>
 
+notif:
+  name: notiffdsa
+  email: kkkfafa@example.gov
+  password_digest: <%= User.digest('password') %>
+  activated: true
+  activated_at: <%= Time.zone.now %>
+  # follow_notification: true
+
+not_notif:
+  name: non_notif
+  email: bo@example.gov
+  password_digest: <%= User.digest('password') %>
+  activated: true
+  activated_at: <%= Time.zone.now %>
+
 non_activated:
   name: Non activated
   email: non_activated@example.gov

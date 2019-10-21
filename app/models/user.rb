@@ -103,13 +103,23 @@ class User < ApplicationRecord
 
   #ユーザーをフォローする
   def follow(other_user)
-    following << other_user
     #「<<」は配列の最後にデータを追加
+    following << other_user
+    #通知メール送信
+    if other_user.follow_notification
+      #通知設定がONの場合
+      Relationship.send_follow_email(other_user, self)
+    end
   end
 
   #ユーザーをフォロー解除する
   def unfollow(other_user)
     active_relationships.find_by(followed_id: other_user.id).destroy
+    #通知メール送信
+    if other_user.follow_notification
+      #通知設定がONの場合
+      Relationship.send_unfollow_email(other_user, self)
+    end
   end
 
   #現在のユーザーがフォローしてたらTRUEを返す

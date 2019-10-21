@@ -108,7 +108,8 @@ class UsersController < ApplicationController
       def user_params
         # ここで許可されたパラメータのみユーザーは編集可能
         params.require(:user).permit(:name, :email, :password,
-                                     :password_confirmation)
+                                     :password_confirmation,
+                                     :follow_notification)
       end
 
       # BEFOREアクション

@@ -13,6 +13,11 @@
   <%= f.label :password_confirmation %>
   <%= f.password_field :password_confirmation, class: 'form-control' %>
 
+  <%= f.label :follow_notification, class:"checkbox inline" do %>
+      <%= f.check_box :follow_notification %>
+      <span>Send email when other users follow or unfollow you</span>
+  <% end %>
+
   <%# 【コメント】「yield」はprovideで定義したテキストが入る %>
   <%= f.submit yield(:button_text), class: "btn btn-primary" %>
 <% end %>
