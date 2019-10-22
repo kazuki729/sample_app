@@ -11,5 +11,8 @@
       <%= link_to "delete", micropost, method: :delete,
                                        data: { confirm: "You sure?" } %>
     <% end %>
+    <% unless current_user?(micropost.user) %>
+      <%= link_to "reply to #{micropost.user.name}", root_path(:reply_tag => "@#{micropost.user.id}-#{micropost.user.name}") %>
+    <% end %>
   </span>
 </li>

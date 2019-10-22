@@ -1,15 +1,30 @@
 <%= form_for(@micropost) do |f| %>
   <%= render 'shared/error_messages', object: f.object %>
   <div class="field">
-    <%= f.text_area :content, placeholder: "Compose new micropost..." %>
+    <% if params[:reply_tag] == nil  %>
+      <%= f.text_area :content, placeholder: "Compose new micropost..." %>
+    <% else %>
+      <%= f.text_area :content, value: params[:reply_tag], id: "post_area"%>
+    <% end %>
   </div>
-  <%= f.submit "Post", class: "btn btn-primary" %>
+  <% if params[:reply_tag] == nil  %>
+    <%= f.submit "Post", class: "btn btn-primary" %>
+  <% else %>
+    <%= f.submit "Reply", class: "btn btn-primary" %>
+  <% end %>
   <span class="picture">
     <%= f.file_field :picture, accept: 'image/jpeg,image/gif,image/png' %>
   </span>
 <% end %>
 
 <script type="text/javascript">
+  //入力ボックスのカーソル当て（テキストの末尾にフォーカスをあてる）
+  temp = document.getElementById('post_area').value //値を保持
+  document.getElementById('post_area').value = "" //テキストエリアを消す
+  document.getElementById('post_area').focus(); //javascriptを使った、フォーカス処理（f.text_area）
+  document.getElementById('post_area').value = temp //保持していた値を再度入力
+
+  //画像の容量制限
   $('#micropost_picture').bind('change', function() {
     var size_in_megabytes = this.files[0].size/1024/1024;
     if (size_in_megabytes > 5) {
