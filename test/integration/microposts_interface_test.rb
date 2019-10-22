@@ -55,4 +55,62 @@ class MicropostsInterfaceTest < ActionDispatch::IntegrationTest
     get root_path #ルートパスへ移動
     assert_match "1 micropost", response.body #投稿数表示が正しい事を確認（単数形）
   end
+
+  #返信機能のテスト
+  #返信投稿時の返信先の確認
+  #返信の表示範囲の確認
+  #、、、
+  test "reply to other user" do
+    log_in_as(@user) #ログイン
+    get root_path #ルートパスへ移動
+
+    #存在しないIDを指定した場合
+    assert_no_difference 'Micropost.count' do
+      #投稿数が変化しない事を確認（投稿失敗チェック）
+      post microposts_path, params: {micropost: {content: "@1000000000000000000"}}
+    end
+    assert_select 'div#error_explanation' #エラー表示されることをチェック
+
+    #自分自身へ返信した場合
+    assert_no_difference 'Micropost.count' do
+      post microposts_path, params: {micropost: {content: "@#{@user.id}-#{@user.name}"}}
+    end
+    assert_select 'div#error_explanation'
+
+    #IDとユーザー名が一致しない場合
+    other_user = users(:archer)
+    assert_no_difference 'Micropost.count' do
+      post microposts_path, params: {micropost: {content: "@#{other_user.id}-HogeraHogera"}}
+    end
+    assert_select 'div#error_explanation'
+
+    #正しく返信先を指定した場合(正しい投稿)
+    assert_difference 'Micropost.count', 1 do
+      post microposts_path, params: {micropost: {content: "@#{other_user.id}-#{other_user.name}"}}
+    end
+  end
+
+  #返信が投稿者と返信先のフィードのみに表示され、
+  #それ以外のユーザーのフィードには表示されないことをチェックします。
+  test "reply post visibility" do
+    #投稿者のフィードには表示される
+    log_in_as(@user) #ログイン
+    get root_path #ルートパスへ移動（フィードが表示されている）
+    reply_to_user = users(:archer) #返信先ユーザー
+    content = "@#{reply_to_user.id}-#{reply_to_user.name}" #返信投稿の本文
+    post microposts_path, params: {micropost: {content: content}} #返信投稿
+    follow_redirect!
+    assert_match content, response.body #投稿者自身のフィードに返信投稿が表示されている事をチェック
+
+    #返信先のフィードには表示される
+    log_in_as(reply_to_user) #返信先ユーザーでログイン
+    get root_path #ルートパスへ移動（フィードが表示されている）
+    assert_match content, response.body #返信先ユーザーのフィードに返信投稿が表示されている事をチェック
+
+    #関係ないユーザーには表示されない
+    other_user = users(:lana) #投稿者でも返信先でもないユーザー
+    log_in_as(other_user) #ログイン
+    get root_path #ルートパスへ移動（フィードが表示さている）
+    assert_no_match content, response.body #フィードに返信投稿が表示されていない事をチェック
+  end
 end
