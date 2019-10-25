@@ -1,0 +1,29 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  content: "How are you?"
+  from_id: 1
+  to_id: 2
+  room_id: "1-2"
+  created_at: <%= 3.minutes.ago %>
+
+two:
+  content: "I am fine."
+  from_id: 2
+  to_id: 1
+  room_id: "1-2"
+  created_at: <%= 5.years.ago %>
+
+three:
+  content: "Today is rain."
+  from_id: 2
+  to_id: 1
+  room_id: "1-2"
+  created_at: <%= 20.minutes.ago %>
+
+most_recent:
+    content: "I am tired."
+    from_id: 2
+    to_id: 1
+    room_id: "1-2"
+    created_at: <%= Time.zone.now %>

@@ -6,8 +6,15 @@ class User < ApplicationRecord
   has_many :passive_relationships, class_name:  "Relationship",
                                    foreign_key: "followed_id",
                                    dependent:   :destroy
+  #Relationshipモデル関係
   has_many :following, through: :active_relationships, source: :followed #followingの関連付け
   has_many :followers, through: :passive_relationships, source: :follower
+  #Messageモデル関連
+  has_many :from_messages, class_name: "Message", foreign_key: "from_id", dependent: :destroy
+  has_many :to_messages, class_name: "Message", foreign_key: "to_id", dependent: :destroy
+  has_many :sent_messages, through: :from_messages, source: :from
+  has_many :received_messages, through: :to_messages, source: :to
+
   attr_accessor :remember_token, :activation_token, :reset_token
   before_save   :downcase_email
   before_create :create_activation_digest
@@ -126,6 +133,12 @@ class User < ApplicationRecord
   #現在のユーザーがフォローしてたらTRUEを返す
   def following?(other_user)
     following.include?(other_user)
+  end
+
+  # メッセージを送信する
+  def send_message(other_user, room_id, content)
+    #create!はレコード追加に失敗した場合、例外を発生させる
+    from_messages.create!(to_id: other_user.id, room_id: room_id, content: content)
   end
 
   private

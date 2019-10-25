@@ -15,25 +15,47 @@ class UsersController < ApplicationController
       @microposts = @user.microposts.paginate(page: params[:page])
     end
     @url = user_path(@user)
+
+    #メッセージの取得
+    unless current_user.nil? #user/1にログインしない状態で遷移した場合スキップ
+      unless current_user.id == @user.id #ログインユーザーが自分のプロフィールページに遷移した時はスキップ
+        #ログインユーザーが他のユーザーのプロフィールページに遷移した時、メッセージの取得
+        @room_id = message_room_id(current_user, @user)
+        @messages = Message.recent_in_room(@room_id)
+      end
+    end
+  end
+
+  #送信者と受信者のIDからルームIDを作成し、それを元にメッセージを取得
+  #(例)送信者(id:1)、受信者(id:5) ➡ ROOM_ID = "1-5"
+  #----送信者(id:5)、受信者(id:1) ➡ ROOM_IDは上記と同じ！
+  def message_room_id(first_user, second_user)
+    first_id = first_user.id.to_i
+    second_id = second_user.id.to_i
+    if first_id < second_id
+      "#{first_user.id}-#{second_user.id}"
+    else
+      "#{second_user.id}-#{first_user.id}"
+    end
   end
 
   def new
     @user = User.new
   end
 
-  def create
-    # @user = User.new(params[:user])    # 実装は終わっていないことに注意!
-    @user = User.new(user_params)
-    if @user.save
-      # 保存の成功をここで扱う。
-      log_in @user
-      flash[:success] = "Wlecome to the sample App!"
-      # "redirect_to @user" = "redirect_to user_url(@user)"
-      redirect_to user_url(@user)
-    else
-      render 'new'
-    end
-  end
+  # def create
+  #   # @user = User.new(params[:user])    # 実装は終わっていないことに注意!
+  #   @user = User.new(user_params)
+  #   if @user.save
+  #     # 保存の成功をここで扱う。
+  #     log_in @user
+  #     flash[:success] = "Wlecome to the sample App!"
+  #     # "redirect_to @user" = "redirect_to user_url(@user)"
+  #     redirect_to user_url(@user)
+  #   else
+  #     render 'new'
+  #   end
+  # end
 
   def edit
     # ユーザー情報を編集するアクション

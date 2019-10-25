@@ -313,3 +313,104 @@ span.picture {
     }
   }
 }
+
+//メッセージボックス
+section.message_box {
+  padding: 10px;
+  border: 3px solid #1E90FF;
+  overflow: scroll;
+  //background-image: url("1.png");
+  //background-size:cover;
+  background: #B0C4DE;//水色
+  height: 400px;
+  #messages {
+    //height: 400px;
+  }
+}
+
+//メッセージ入力欄の位置
+div.message_form {
+  padding-top: 10px;
+}
+
+#message_sender {
+  font-size: 1.1em;
+}
+
+//メッセージ内容の文字サイズ
+#message_content {
+  font-size: 0.8em;
+}
+
+// chatメッセージの吹き出し
+//本文のバルーン
+.balloon_self {
+  position: relative;
+  margin: 5px 0 0 5px; //吹き出しの外側の余白[上余白, 右余白, 下余白, 左余白]
+  padding: 5px; //文字の周りの余白
+  background: #00CC00; //緑
+  border-radius: 20px;
+  display: inline-block;
+  word-break: break-all; //半角・全角の混在対策
+  text-align: justify; //半角・全角の混在対策
+  max-width: calc(100% - 150px) //max幅は固定
+}
+
+.balloon_self:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: -10px;
+  margin-top: -12px;
+  border: 5px solid transparent;
+  border-left: 10px solid #00CC00;
+  z-index: 2;
+}
+
+.balloon_recipient{
+  position: relative;
+  margin: 5px 0 5px 0; //吹き出しの外側の余白[上余白, 右余白, 下余白, 左余白]
+  padding: 5px; //文字の周りの余白
+  background: #1E90FF; //青
+  border-radius: 20px;
+  display: inline-block;
+  word-break: break-all; //半角・全角の混在対策
+  text-align: justify; //半角・全角の混在対策
+  max-width: calc(100% - 150px) //max幅は固定
+}
+
+.balloon_recipient:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -10px;
+  margin-top: -12px;
+  border: 5px solid transparent;
+  border-right: 10px solid #1E90FF;
+  z-index: 2;
+}
+
+.balloon_icon{
+  position: relative;
+  margin: 0 0 0 0px; //吹き出しの外側の余白[上余白, 右余白, 下余白, 左余白]
+  padding: 2px; //文字の周りの余白
+  background: transparent; //透明
+  border-radius: 5px;
+  display: inline-block;
+  max-width: 30px //max幅は固定
+}
+
+.balloon_self p {
+  margin: 0;
+  padding: 0;
+}
+
+.balloon_recipient p {
+  margin: 0;
+  padding: 0;
+}
+
+.balloon_icon p {
+  margin: 0;
+  padding: 0;
+}
