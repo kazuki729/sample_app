@@ -7,23 +7,28 @@
   <% user = User.find_by(id: message.from_id) %>
   <div class = "<%= message.id %>" >
     <!-- どうやってカレントユーザーを取得する？ -->
-    <% if session[:user_id] == user.id %>
-      <p class="balloon_self" id="message_content"><%= message.content %></p>
-      <p class="balloon_icon"><%= gravatar_for(user, size: 25) %></p>
+    <% if $current == user.id %>
+      <div class="to_right">
+        <p class="balloon_self" id="message_content"><%= message.content %></p>
+        <p class="balloon_icon"><%= gravatar_for(user, size: 25) %></p>
+      </div>
     <% else %>
-      <p class="balloon_icon"><%= gravatar_for(user, size: 25) %></p>
-      <p class="balloon_recipient" id="message_content"><%= message.content %></p>
+      <div class="to_left">
+        <p class="balloon_icon"><%= gravatar_for(user, size: 25) %></p>
+        <p class="balloon_recipient" id="message_content"><%= message.content %></p>
+      </div>
     <% end %>
   </div>
 </div>
 
 <!-- 送信者か受信者かによって、表示位置を変更する -->
-<script type="text/javascript">
+<!-- <script type="text/javascript">
   var from_id = <%= message.from_id %>;
-  var current_user_id = $('.message').data('session');
+  // var current_user_id = $('.message').data('session');
+  var current_user_id = $current;
   if(from_id == current_user_id){
     $('div.' + <%= message.id %>).css('text-align', 'right'); //カレントユーザーは右に表示
   }else{
     $('div.' + <%= message.id %>).css('text-align', 'left'); //チャット相手は左に表示
   }
-</script>
+</script> -->

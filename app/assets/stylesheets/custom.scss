@@ -319,9 +319,9 @@ section.message_box {
   padding: 10px;
   border: 3px solid #1E90FF;
   overflow: scroll;
-  //background-image: url("1.png");
-  //background-size:cover;
-  background: #B0C4DE;//水色
+  background-image: url("1.png");
+  background-size:cover;
+  //background: #B0C4DE;//水色
   height: 400px;
   #messages {
     //height: 400px;
@@ -413,4 +413,11 @@ div.message_form {
 .balloon_icon p {
   margin: 0;
   padding: 0;
+}
+
+.to_right{
+  text-align: right;
+}
+.to_left{
+  text-align: left;
 }

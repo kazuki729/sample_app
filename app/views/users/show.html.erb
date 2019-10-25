@@ -16,11 +16,14 @@
 
     <%# チャット機能関連の部品 %>
     <% if !current_user?(@user) && logged_in? %>
+      <%= $current = current_user.id %>
       <section class="message_box">
         <div id="messages">
+          <!-- users_controllerで取得した@messages -->
           <%= render @messages %>
         </div>
       </section>
+
       <!-- chatボックスの全てのメッセーの高さの合計を算出して、スクロール位置を決定 -->
       <script type="text/javascript">
         var height = 0;
@@ -29,6 +32,7 @@
         });
         $('section.message_box').scrollTop(height);
       </script>
+
       <!-- メッセージ入力フォーム -->
       <div class="message_form">
        <%= render 'messages/message_form',
